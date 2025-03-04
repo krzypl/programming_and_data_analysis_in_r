@@ -1,0 +1,123 @@
+---
+title: "Programming and data analysis in R"
+author: "Krzysztof Pleskot  
+krzypl@amu.edu.pl  
+Room 170"
+date: "2025-03-07"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+def.chunk.hook  <- knitr::knit_hooks$get("chunk")
+knitr::knit_hooks$set(chunk = function(x, options) {
+  x <- def.chunk.hook(x, options)
+  ifelse(options$size != "normalsize", paste0("\n \\", options$size,"\n\n", x, "\n\n \\normalsize"), x)
+})
+```
+
+## Programming
+
+
+Programming is the process of creating a series of instructions that tell a computer how to perform a specific task  
+
+## Why does the world need programming?
+
+- Automation of tasks
+- Ease of replicating and expanding specific solutions
+- Reproducibility
+
+## Is programming only for programmers?
+
+## What is essential for programming?
+
+- Time
+- Patience
+- Enthusiasm
+- Basic mathematical knowledge
+
+## Programming Language
+
+- **Definition** – A set of rules that define when a sequence of symbols forms a computer program and what computations it describes (from Wikipedia).
+- There is no single best programming language.
+
+## R as a Programming Language
+
+- Open source
+- Well suited for data analysis and visualization
+- Extendable functionality through additional packages
+- Can be used with an Integrated Development Environment (IDE)
+
+**Disadvantages:**
+- Contains many inconsistencies
+
+## Where to learn more?
+
+- <https://r4ds.had.co.nz/> - R for Data Science
+- <https://jrnold.github.io/r4ds-exercise-solutions/> - Solutions for R4DS
+- <https://couttsgeodata.netlify.app/post/2021-02-28-r_geoscience/> - R packages for geological data analysis
+- <https://stackoverflow.com/questions/tagged/r>
+- Google
+
+## Course Materials
+
+<https://github.com/krzypl/programming_and_data_analysis_in_r>
+
+## A Bit of Inspiration
+
+```{r echo = TRUE, message=FALSE, warning=FALSE, out.width="50%"}
+library(GGally)
+data(tips, package = "reshape")
+ggpairs(tips[, c(1, 3, 4, 2)],
+  upper = list(continuous = "density", combo = "box_no_facet"),
+  lower = list(continuous = "points", combo = "dot_no_facet"))
+```
+
+## Another Inspiration
+
+```{r echo = FALSE, message=FALSE, warning=FALSE}
+library(ggplot2)
+library(dplyr)
+library(maps)
+library(viridis)
+UK <- map_data("world") %>% filter(region=="UK")
+data <- world.cities %>% filter(country.etc=="UK")
+mybreaks <- c(0.02, 0.04, 0.08, 1, 7)
+
+data %>%
+ arrange(pop) %>%
+ mutate( name=factor(name, unique(name))) %>%
+ ggplot() +
+    geom_polygon(data = UK, aes(x=long, y = lat, group = group), fill="grey", alpha=0.3) +
+    geom_point( aes(x=long, y=lat, size=pop, color=pop), alpha=0.9) +
+    scale_size_continuous(range=c(1,12)) +
+    scale_color_viridis(trans="log") +
+    theme_void() + ylim(50,59) + coord_map() + theme(legend.position="none")
+```
+
+## Script to Generate the Map
+
+::: {.small}
+
+```{r eval=FALSE, echo=TRUE}
+library(ggplot2)
+library(dplyr)
+library(maps)
+library(viridis)
+UK <- map_data("world") %>% filter(region=="UK")
+data <- world.cities %>% filter(country.etc=="UK")
+mybreaks <- c(0.02, 0.04, 0.08, 1, 7)
+
+data %>% arrange(pop) %>%
+ mutate( name=factor(name, unique(name))) %>%
+ ggplot() +
+    geom_polygon(data = UK, aes(x=long, y = lat, group = group),
+                 fill="grey", alpha=0.3) +
+    geom_point( aes(x=long, y=lat, size=pop, color=pop), alpha=0.9) +
+    scale_size_continuous(range=c(1,12)) +
+    scale_color_viridis(trans="log") +
+    theme_void() + ylim(50,59) + coord_map() +
+  theme(legend.position="none")
+```
+
+::: 
