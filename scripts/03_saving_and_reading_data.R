@@ -37,12 +37,15 @@ my_test_data2 <- read_rds("data/my_test_data2.rds")
 # Loading data from databases using Pangea ----
 vignette("pangaear")
 
-pang_search <- pg_search(query = 'grain size', bbox = c(-124.2, 41.8, -116.8, 46.1))
-pang_raw <- pg_data(doi = pang_search$doi[3])
-pang_output <- pang_raw[[1]]$data
+pang_search <- pg_search(query = 'grain size', bbox = c(163, -78, 164, -76), count = 40)
+pang_raw <- pg_data(doi = pang_search$doi[1])
+pang_output <- pang_raw[[2]]$data
 
 View(pang_output)
 
-plot(pang_output$`Depth sed [m]`, pang_output$`Size [µm]`, type = "b")
+plot(pang_output$`Depth sed [m]`, pang_output$`Grain size mean [phi]`, type = "b",
+     ylab = "Mean grain size (phi)",
+     xlab = "Depth (m)",
+     main = "Grain size data from Barret (2001)")
 
-## Task: Choose columns from the pang_output data frame (`Depth sed [m]` and `Size [µm]`), rename them to "Depth" and "Diameter", create a plot showing the change of diameter with depth. Then save the data frame in the "data" folder, naming the file after the first author and the publication year.
+## Task: Choose columns from the pang_output data frame (`Depth sed [m]` and `>2 mm [%]`), rename them to "Depth" and "Gravel relative contribution", create a plot showing the change of gravel contribution with depth. Then save the data frame in the "data" folder, naming the file after the first author and the publication year.
