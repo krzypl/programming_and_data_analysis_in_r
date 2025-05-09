@@ -1,0 +1,49 @@
+---
+title: Presentation of grain size data from the publication xxx and the method of
+  obtaining them using R
+author: "Krzysztof Pleskot"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Check out the R Markdown cheat sheet: <https://rmarkdown.rstudio.com/lesson-15.HTML>
+
+## At the beginning, provide the bibliographic data of the publication and include the article abstract
+
+insert abstract here
+
+## Then proceed to data acquisition
+
+- Data can come from any location. We are interested in the mean grain size.  
+
+- It's important that the number of observations (samples for which grain size analysis was performed) does not exceed 150.  
+
+- If the dataset you choose has more observations, reduce the data frame accordingly to not exceed the limit.  
+
+- When generating code, remember to use `echo=TRUE` and `warning=FALSE`  
+
+```{r echo=TRUE, warning=FALSE}
+library(pangaear)
+pang_search <- pg_search(query = 'grain size', bbox = c(163, -78, 164, -76), count = 40)
+pang_raw <- pg_data(doi = pang_search$doi[1])
+pang_output <- pang_raw[[2]]$data
+print(pang_output)
+```
+
+## Data modification
+
+- Write your own function that converts data from micrometers/millimeters to the phi scale, or from phi scale to micrometers/milimiters, depending on the units in the original publication
+# Apply this function to calculate values for each observation (each sample)
+
+## Present data in the recalculated units in relation to depth in the core. Provide suitable labes for axis, title, etc.
+
+```{r echo=TRUE}
+plot(pang_output$`Depth sed [m]`, pang_output$`Grain size mean [phi]`)
+title(main = "Grain size data from Barret (2001)")
+```
+
+## Include a description of the presented data with a minimum of 100 words
